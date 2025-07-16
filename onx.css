@@ -1,0 +1,86 @@
+body {
+	font-family: "Onest", sans-serif;
+}
+
+h1 {
+	margin-top: 40px;
+	text-align: center;
+}
+
+h2 {
+	text-align: center;
+}
+
+h3 {
+	margin-bottom: 5px;
+}
+
+.startdiv {
+	width: 300px;
+	margin: auto;
+	text-align: center;
+}
+
+.buttondiv {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+table {
+	margin: auto;
+	border-collapse: collapse;
+	text-align: center;
+	/*	border-spacing: 0px; */
+}
+
+td {
+	width: 100px;
+	height: 100px;
+	border-style: solid;
+	border-color: black;
+	border-width: 0px;
+	margin: 0px;
+	border-spacing: 0;
+	font-size: 3rem;
+}
+
+td:hover {
+	background-color: rgb(188, 243, 243);
+}
+
+.left {
+	border-right-width: 1px;
+	border-left-width: 0px;
+}
+
+.top {
+	border-top-width: 0px;
+	border-bottom-width: 1px;
+}
+
+.right {
+	border-right-width: 0px;
+	border-left-width: 1px;
+}
+
+.bottom {
+	border-top-width: 1px;
+	border-bottom-width: 0px;
+}
+
+.wincell {
+	background-color: lightseagreen;
+}
+
+.wincell:hover {
+	color: rgb(188, 243, 243);
+	background-color: lightseagreen;
+}
+
+button {
+	width: 140px;
+	height: 40px;
+	font-size: 1rem;
+	font-weight: bold;
+}

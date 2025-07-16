@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Noughts and Crosses</title>
+	<link rel="stylesheet" type="text/css" href="on
+	x.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+	<h1>Noughts and Crosses</h1>
+	<h2><i>aka - Tic Tac Toe</i></h2>
+	<div class="startdiv">
+		<h3>Who goes first?</h3>
+		<form id="radioForm">
+			<input type="radio" name="whoStart" value="O" checked id="radioO">
+			<label for="O">O</label><br />
+			<input type="radio" name="whoStart" value="X" id="radioX">
+			<label for="X">X</label>
+		</form>
+	</div>
+	<br />
+	<br />
+	<table>
+		<tr>
+			<td class="left top tcell" id="c00"></td>
+			<td class="top tcell" id="c01"></td>
+			<td class="top right tcell" id="c02"></td>
+		</tr>
+		<tr>
+			<td class="left tcell" id="c10"></td>
+			<td class="tcell" id="c11"></td>
+			<td class="right tcell" id="c12"></td>
+		</tr>
+		<tr>
+			<td class="bottom left tcell" id="c20"></td>
+			<td class="bottom tcell" id="c21"></td>
+			<td class="bottom right tcell" id="c22"></td>
+		</tr>
+	</table>
+	<h2 id="whoWon"></h2>
+	<div class="buttondiv">
+		<button id="resetButton" style="display:none">Reset</button>
+	</div>
+
+	<script type="text/javascript" src="onx.js"></script>
+</body>
+
+</html>
