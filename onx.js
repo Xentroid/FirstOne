@@ -10,13 +10,117 @@ let who = 'O';
 let gameState = [
     ['', '', ''],
     ['', '', ''],
-    ['', '', '']
+    ['', '', ''],
+    [0]
 ];
 let win = false;
 let start = 'O';
-let oScore = 0;
-let xScore = 0;
+let scores = {
+    oScore: 0,
+    xScore: 0
+}
 
+function minimax(position, depth, alpha, beta, maximizingPlayer, firstlevel) {
+    let positionScore = staticScore(position)
+    if (depth === 0 || Math.abs(positionScore) >= 10) {
+        return positionScore;
+    }
+    if (maximizingPlayer) {
+        let maxEval = -1000;
+        const possibleMoves = getPossibleMoves(position);
+        for (const move of possibleMoves) {
+            const eval = minimax(move, depth - 1, alpha, beta, false, false);
+            maxEval = Math.max(maxEval, eval);
+            alpha = Math.max(alpha, eval);
+            if (firstlevel) {
+                move[3] = eval;
+            }
+//            if (beta <= alpha) break;
+        }
+        if (firstlevel) {
+            let best = [];
+            let bestScore = -1000;
+            for (const move of possibleMoves) {
+                if (move[3] !== 1000) {
+                    if (move[3] > bestScore) {
+                        best = structuredClone(move);
+                        bestScore = move[3];
+                    }
+                }
+            }
+            console.log(best);
+        }
+        return maxEval;
+    } else {
+        let minEval = 1000;
+        const possibleMoves = getPossibleMoves(position);
+        for (const move of possibleMoves) {
+            const eval = minimax(move, depth - 1, alpha, beta, true, false);
+            minEval = Math.min(minEval, eval);
+            beta = Math.min(beta, eval);
+            if (firstlevel) {
+                move[3] = eval;
+            }
+//            if (beta <= alpha) break;
+        }
+        if (firstlevel) {
+            let best = [];
+            let bestScore = 1000;
+            for (const move of possibleMoves) {
+                if (move[3] !== 1000) {
+                    if (move[3] < bestScore) {
+                        best = structuredClone(move);
+                        bestScore = move[3];
+                    }
+                }
+            }
+            console.log(best);
+        }
+        return minEval;
+    }
+}
+
+function getPossibleMoves(startState) {
+    let oCount = 0;
+    let xCount = 0;
+    let moveCount = 0;
+    let who = '';
+    let returnStates = [];
+    let newScores = {
+        oScore: 0,
+        xScore: 0
+    }
+    for (let x = 0; x < 3; x++) {
+        for (let y = 0; y < 3; y++) {
+            if (startState[x][y] === 'O') {
+                oCount++;
+                moveCount++;
+            } else if (startState[x][y] === 'X') {
+                xCount++;
+                moveCount++;
+            }
+        }
+    }
+    if (oCount > xCount) {
+        who = 'X';
+    } else if (xCount > oCount) {
+        who = 'O';
+    } else {
+        who = start;
+    }
+
+    for (let x = 0; x < 3; x++) {
+        for (let y = 0; y < 3; y++) {
+            if (startState[x][y] === '') {
+                let newState = structuredClone(startState);
+                newState[3] = 1000;
+                newState[x][y] = who;
+                returnStates.push(newState);
+            }
+        }
+    }
+    return returnStates;
+}
 
 // Function to reset everything after a game concludes
 function reset() {
@@ -36,20 +140,21 @@ function reset() {
         tcell.innerHTML = '';
     })
     resetButton.style.display = "none";
-    oScore = 0;
-    xScore = 0;
+    scores.oScore = 0;
+    scores.xScore = 0;
     moveScores.innerHTML = `The current score is O=0, X=0`;
-    radioO.removeAttribute("disabled");
-    radioX.removeAttribute("disabled");
+    radioO.classList.remove('divdisable');
+    radioX.classList.remove('divdisable');
 }
 
 // Checks to see if a win has occurred
 function checkWinStatus() {
     let wincell = '';
+    let lwin = false;
     for (let x = 0; x < 3; x++) {
         if ((gameState[x][0] !== '') &&
             ((gameState[x][0] === gameState[x][1]) && (gameState[x][0] === gameState[x][2]))) {
-            win = true;
+            lwin = true;
             wincell = `#c${x}0`;
             document.querySelector(wincell).classList.add('wincell');
             wincell = `#c${x}1`;
@@ -60,11 +165,11 @@ function checkWinStatus() {
         }
     }
 
-    if (!win) {
+    if (!lwin) {
         for (let y = 0; y < 3; y++) {
             if ((gameState[0][y] !== '') &&
                 ((gameState[0][y] === gameState[1][y]) && (gameState[0][y] === gameState[2][y]))) {
-                win = true;
+                lwin = true;
                 wincell = `#c0${y}`;
                 document.querySelector(wincell).classList.add('wincell');
                 wincell = `#c1${y}`;
@@ -76,51 +181,58 @@ function checkWinStatus() {
         }
     }
 
-    if (!win && gameState[0][0] !== '' &&
+    if (!lwin && gameState[0][0] !== '' &&
         (gameState[0][0] === gameState[1][1]) && (gameState[0][0] === gameState[2][2])) {
-        win = true;
+        lwin = true;
         document.querySelector('#c00').classList.add('wincell');
         document.querySelector('#c11').classList.add('wincell');
         document.querySelector('#c22').classList.add('wincell');
     }
 
-    if (!win && gameState[0][2] !== '' &&
+    if (!lwin && gameState[0][2] !== '' &&
         (gameState[0][2] === gameState[1][1]) && (gameState[0][2] === gameState[2][0])) {
-        win = true;
+        lwin = true;
         document.querySelector('#c02').classList.add('wincell');
         document.querySelector('#c11').classList.add('wincell');
         document.querySelector('#c20').classList.add('wincell');
     }
-
-    if (win) {
-        wohWon.innerHTML = `${who} won that game`;
-        resetButton.style.display = "block";
-    } else if (moves === 9) {
-        wohWon.innerHTML = 'Nobody won that one';
-        resetButton.style.display = "block";
-    }
+    return lwin;
 }
 
 // Uses the count of Os or Xs on a paticuar row, column or diagonal to increase the score
-function rowScore(oCount, xCount) {
+function rowScore(oCount, xCount, lscores) {
     if (oCount === 3) {
-        oScore += 10;
+        lscores.oScore += 10;
     } else if ((oCount === 2) && (xCount === 0)) {
-        oScore += 1;
+        lscores.oScore += 1;
     }
     if (xCount == 3) {
-        xScore += 10;
+        lscores.xScore += 10;
     } else if ((xCount === 2) && (oCount === 0)) {
-        xScore += 1;
+        lscores.xScore += 1;
     }
 }
 
+function staticScore(moveArray) {
+    let lscores = {
+        oScore: 0,
+        xScore: 0
+    };
+    positionScore(moveArray, lscores);
+    if (lscores.oScore >= 10) {
+        return 10
+    } else if (lscores.xScore >= 10) {
+        return -10
+    }
+    return lscores.oScore - lscores.xScore;
+}
+
 // Takes a state of play and calculates how strong a position it is for each player
-function positionScore(moveArray) {
+function positionScore(moveArray, lscores) {
     let oCount = 0;
     let xCount = 0;
-    xScore = 0;
-    oScore = 0;
+    lscores.xScore = 0;
+    lscores.oScore = 0;
 
     for (let x = 0; x < 3; x++) {
         oCount = 0;
@@ -132,7 +244,7 @@ function positionScore(moveArray) {
                 xCount++;
             }
         }
-        rowScore(oCount, xCount);
+        rowScore(oCount, xCount, lscores);
     }
 
     for (let y = 0; y < 3; y++) {
@@ -145,7 +257,7 @@ function positionScore(moveArray) {
                 xCount++;
             }
         }
-        rowScore(oCount, xCount);
+        rowScore(oCount, xCount, lscores);
     }
 
     oCount = 0;
@@ -168,7 +280,7 @@ function positionScore(moveArray) {
     if (moveArray[2][2] === 'X') {
         xCount++;
     }
-    rowScore(oCount, xCount);
+    rowScore(oCount, xCount, lscores);
 
     oCount = 0;
     xCount = 0;
@@ -190,9 +302,7 @@ function positionScore(moveArray) {
     if (moveArray[0][2] === 'X') {
         xCount++;
     }
-    rowScore(oCount, xCount);
-
-    moveScores.innerHTML = `The current score is O=${oScore}, X=${xScore}`;
+    rowScore(oCount, xCount, lscores);
 }
 
 
@@ -203,8 +313,8 @@ tcells.forEach(tcell => {
         const x = parseInt(cellClicked.substr(1, 1));
         const y = parseInt(cellClicked.substr(2, 1));
         if (moves === 0) {
-            radioO.setAttribute("disabled", true);
-            radioX.setAttribute("disabled", true);
+            radioO.classList.add('divdisable');
+            radioX.classList.add('divdisable');
             who = start;
         }
         if ((!win) && (gameState[x][y] === '')) {
@@ -212,16 +322,29 @@ tcells.forEach(tcell => {
             gameState[x][y] = who;
             tcell.innerHTML = who;
             if (moves >= 5) {
-                checkWinStatus();
-            }
-            if (moves >= 3) {
-                positionScore(gameState);
+                win = checkWinStatus();
+                if (win) {
+                    wohWon.innerHTML = `${who} won that game`;
+                    resetButton.style.display = "block";
+                } else if (moves === 9) {
+                    wohWon.innerHTML = 'Nobody won that one';
+                    resetButton.style.display = "block";
+                }
             }
             if (who === 'O') {
                 who = 'X';
             } else {
                 who = 'O';
             }
+        }
+        if (moves >= 3) {
+            positionScore(gameState, scores);
+            moveScores.innerHTML = `The current score is O=${scores.oScore}, X=${scores.xScore}`;
+        }
+        if (who === 'O') {
+            minimax(gameState, Math.min(5, 9 - moves), -10000, 10000, true, true);
+        } else {
+            minimax(gameState, Math.min(5, 9 - moves), -10000, 10000, false, true);
         }
     })
 })
@@ -230,10 +353,15 @@ resetButton.addEventListener('click', function () {
     reset();
 })
 
-radioO.onclick = function () {
+radioO.addEventListener('click', function () {
     start = 'O';
-}
+    radioX.classList.remove('first');
+    radioO.classList.add('first');
+});
 
-radioX.onclick = function () {
+
+radioX.addEventListener('click', function () {
     start = 'X';
-}
+    radioO.classList.remove('first');
+    radioX.classList.add('first');
+});
