@@ -3,7 +3,11 @@ const wohWon = document.querySelector('#whoWon');
 const resetButton = document.querySelector("#resetButton");
 const radioO = document.querySelector("#radioO");
 const radioX = document.querySelector("#radioX");
+const radioPlayer = document.querySelector("#radioPlayer");
+const radioComputer = document.querySelector("#radioComputer");
 const moveScores = document.querySelector("#moveScores");
+const startButton = document.querySelector("#startButton");
+const grid = document.querySelector("#grid");
 
 let moves = 0;
 let who = 'O';
@@ -15,10 +19,44 @@ let gameState = [
 ];
 let win = false;
 let start = 'O';
+let start2 = 'P';
 let scores = {
     oScore: 0,
     xScore: 0
 }
+
+function applyBest(best) {
+    console.log(best);
+    let newx = 0;
+    let newy = 0;
+    for (let x = 0; x < 3; x++) {
+        for (let y = 0; y < 3; y++) {
+            if (gameState[x][y] !== best[x][y]) {
+                newx = x;
+                newy = y;
+                x = 5;
+                y = 5;
+            }
+        }
+    }
+    gameState[newx][newy] = who;
+    const tid = `#c${newx}${newy}`;
+    const tcel = document.querySelector(tid);
+    tcel.innerHTML = who;
+    moves++;
+    if (moves >= 5) {
+        win = checkWinStatus();
+        if (win) {
+            wohWon.innerHTML = `${who} won that game`;
+            resetButton.style.display = "block";
+        } else if (moves === 9) {
+            wohWon.innerHTML = 'Nobody won that one';
+            resetButton.style.display = "block";
+        }
+    }
+    nextPlayer();
+}
+
 
 function minimax(position, depth, alpha, beta, maximizingPlayer, firstlevel) {
     let positionScore = staticScore(position)
@@ -35,7 +73,7 @@ function minimax(position, depth, alpha, beta, maximizingPlayer, firstlevel) {
             if (firstlevel) {
                 move[3] = eval;
             }
-//            if (beta <= alpha) break;
+            //            if (beta <= alpha) break;
         }
         if (firstlevel) {
             let best = [];
@@ -48,7 +86,7 @@ function minimax(position, depth, alpha, beta, maximizingPlayer, firstlevel) {
                     }
                 }
             }
-            console.log(best);
+            applyBest(best);
         }
         return maxEval;
     } else {
@@ -61,7 +99,7 @@ function minimax(position, depth, alpha, beta, maximizingPlayer, firstlevel) {
             if (firstlevel) {
                 move[3] = eval;
             }
-//            if (beta <= alpha) break;
+            //            if (beta <= alpha) break;
         }
         if (firstlevel) {
             let best = [];
@@ -74,7 +112,7 @@ function minimax(position, depth, alpha, beta, maximizingPlayer, firstlevel) {
                     }
                 }
             }
-            console.log(best);
+            applyBest(best);
         }
         return minEval;
     }
@@ -145,6 +183,10 @@ function reset() {
     moveScores.innerHTML = `The current score is O=0, X=0`;
     radioO.classList.remove('divdisable');
     radioX.classList.remove('divdisable');
+    radioPlayer.classList.remove('divdisable');
+    radioComputer.classList.remove('divdisable');
+    startButton.classList.remove('divdisable');
+    grid.classList.add('divdisable');
 }
 
 // Checks to see if a win has occurred
@@ -305,6 +347,13 @@ function positionScore(moveArray, lscores) {
     rowScore(oCount, xCount, lscores);
 }
 
+function nextPlayer() {
+    if (who === 'O') {
+        who = 'X';
+    } else {
+        who = 'O';
+    }
+}
 
 // Adds an eventlistener for each cell, which does the business for each cell
 tcells.forEach(tcell => {
@@ -313,8 +362,6 @@ tcells.forEach(tcell => {
         const x = parseInt(cellClicked.substr(1, 1));
         const y = parseInt(cellClicked.substr(2, 1));
         if (moves === 0) {
-            radioO.classList.add('divdisable');
-            radioX.classList.add('divdisable');
             who = start;
         }
         if ((!win) && (gameState[x][y] === '')) {
@@ -331,23 +378,26 @@ tcells.forEach(tcell => {
                     resetButton.style.display = "block";
                 }
             }
+            nextPlayer();
             if (who === 'O') {
-                who = 'X';
+                minimax(gameState, Math.min(5, 9 - moves), -10000, 10000, true, true);
             } else {
-                who = 'O';
+                minimax(gameState, Math.min(5, 9 - moves), -10000, 10000, false, true);
             }
         }
         if (moves >= 3) {
             positionScore(gameState, scores);
             moveScores.innerHTML = `The current score is O=${scores.oScore}, X=${scores.xScore}`;
         }
-        if (who === 'O') {
-            minimax(gameState, Math.min(5, 9 - moves), -10000, 10000, true, true);
-        } else {
-            minimax(gameState, Math.min(5, 9 - moves), -10000, 10000, false, true);
-        }
+
     })
 })
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 resetButton.addEventListener('click', function () {
     reset();
@@ -359,9 +409,76 @@ radioO.addEventListener('click', function () {
     radioO.classList.add('first');
 });
 
-
 radioX.addEventListener('click', function () {
     start = 'X';
     radioO.classList.remove('first');
     radioX.classList.add('first');
+});
+
+radioPlayer.addEventListener('click', function () {
+    start2 = 'P';
+    radioComputer.classList.remove('first');
+    radioPlayer.classList.add('first');
+});
+
+radioComputer.addEventListener('click', function () {
+    start2 = 'C';
+    radioPlayer.classList.remove('first');
+    radioComputer.classList.add('first');
+});
+
+startButton.addEventListener('click', function () {
+    radioO.classList.add('divdisable');
+    radioX.classList.add('divdisable');
+    radioPlayer.classList.add('divdisable');
+    radioComputer.classList.add('divdisable');
+    grid.classList.remove('divdisable');
+    startButton.classList.add('divdisable');
+    if (start2 == 'C') {
+        let position = getRandomInt(0, 2);
+        if (position === 2) {
+            gameState[1][1] = start;
+            const tcel = document.querySelector("#c11");
+            tcel.innerHTML = start;
+        } else {
+            let x = 0;
+            let y = 0;
+            let orientation = getRandomInt(0, 3);
+            if (position === 0) {
+                if (orientation === 0) {
+                    // Default
+                } else if (orientation === 1) {
+                    x = 2;
+                } else if (orientation === 2) {
+                    y = 2;
+                } else {
+                    x = 2;
+                    y = 2;
+                }
+                gameState[x][y] = start;
+                const tid = `#c${x}${y}`;
+                const tcel = document.querySelector(tid);
+                tcel.innerHTML = start;
+            } else {
+                if (orientation === 0) {
+                    x = 1;
+                } else if (orientation === 1) {
+                    y = 1;
+                } else if (orientation === 2) {
+                    y = 1;
+                    x = 2;
+                } else {
+                    y = 2;
+                    x = 1;
+                }
+                gameState[x][y] = start;
+                const tid = `#c${x}${y}`;
+                const tcel = document.querySelector(tid);
+                tcel.innerHTML = start;
+            }
+        }
+        moves = 1;
+        who = start;
+        nextPlayer();
+    }
 });

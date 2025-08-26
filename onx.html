@@ -8,46 +8,66 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="icon" href="./react/portfologo.png">
 </head>
 
 <body>
-	<h1>Noughts and Crosses</h1>
-	<h2><i>aka - Tic Tac Toe</i></h2>
-	<div class="startdiv">
-		<h3>Who goes first?</h3>
-		<form id="radioForm">
-			<input type="radio" name="whoStart" value="O" checked id="radioO">
-			<label for="O">O</label><br />
-			<input type="radio" name="whoStart" value="X" id="radioX">
-			<label for="X">X</label>
-		</form>
-	</div>
-	<br />
-	<br />
-	<table>
-		<tr>
-			<td class="left top tcell" id="c00"></td>
-			<td class="top tcell" id="c01"></td>
-			<td class="top right tcell" id="c02"></td>
-		</tr>
-		<tr>
-			<td class="left tcell" id="c10"></td>
-			<td class="tcell" id="c11"></td>
-			<td class="right tcell" id="c12"></td>
-		</tr>
-		<tr>
-			<td class="bottom left tcell" id="c20"></td>
-			<td class="bottom tcell" id="c21"></td>
-			<td class="bottom right tcell" id="c22"></td>
-		</tr>
-	</table>
-	<h3 id="moveScores">The Current Score is O=0, X=0</h3>
+	<div class="c-tainer">
+		<h1>Noughts and Crosses</h1>
+		<h2><i>aka - Tic Tac Toe</i></h2>
+		<div class="startdiv">
+			<div class="split">
+				<div class="whoGoesFirst first" id="radioO">'O' Goes First</div>
+				<div class="whoGoesFirst" id="radioX">'X' Goes First</div>
+			</div>
+			<div class="split">
+				<div class="playerFirst first" id="radioPlayer">Player goes first</div>
 
+				<div class="playerFirst" id="radioComputer">Computer goes first</div>
+			</div>
+			<div class="startButton" id="startButton">Start</div>
+		</div>
+		<br />
+		<br />
+		<table class="divdisable" id="grid">
+			<tr>
+				<td class="left top tcell" id="c00"></td>
+				<td class="top tcell" id="c01"></td>
+				<td class="top right tcell" id="c02"></td>
+			</tr>
+			<tr>
+				<td class="left tcell" id="c10"></td>
+				<td class="tcell" id="c11"></td>
+				<td class="right tcell" id="c12"></td>
+			</tr>
+			<tr>
+				<td class="bottom left tcell" id="c20"></td>
+				<td class="bottom tcell" id="c21"></td>
+				<td class="bottom right tcell" id="c22"></td>
+			</tr>
+		</table>
+		<h3 id="moveScores" style="display:none">The Current Score is O=0, X=0</h3>
 
-	<h2 id="whoWon"></h2>
-	<div class="buttondiv">
-		<button id="resetButton" style="display:none">Reset</button>
+		<h2 id="whoWon"></h2>
+		<div class="buttondiv">
+			<button id="resetButton" style="display:none">Reset</button>
+		</div>
+		<div class="adiv">
+			<a href="index.html">Back</a>
+		</div>
+
 	</div>
+
+	<footer>
+		<div class="ftrp">
+			<p>
+				This page was developed with HTML, JavaScript and CSS.
+			</p>
+			<p>
+				© Richard Poulter 2025
+			</p>
+		</div>
+	</footer>
 
 	<script type="text/javascript" src="onx.js"></script>
 </body>

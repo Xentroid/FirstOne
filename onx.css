@@ -1,25 +1,58 @@
 body {
 	font-family: "Onest", sans-serif;
+	background-color: rgb(49, 124, 124);
 }
 
-h1 {
-	margin-top: 40px;
+.c-tainer {
+	max-width: 900px;
+	margin-inline: auto;
+	background-color: rgb(224, 243, 243);
+	padding-top: 5%;
+	padding-bottom: 10%;
+	border-width: 5px;
+	border-color: black;
+	border-style: double;
+}
+
+.adiv {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+a {
+	margin-top: 10px;
+	text-decoration: none;
 	text-align: center;
+}
+
+
+h1 {
+	text-align: center;
+	font-size: 2rem;
+	font-weight: 300;
+	letter-spacing: 0.2rem;
 }
 
 h2 {
 	text-align: center;
+	font-weight: 200;
+	padding-bottom: 20px;
 }
 
 h3 {
-		text-align: center;
+	text-align: center;
 	margin-bottom: 5px;
 }
 
 .startdiv {
-	width: 300px;
+	width: 600px;
 	margin: auto;
 	text-align: center;
+}
+
+.split {
+	display: inline-block;
 }
 
 .buttondiv {
@@ -32,6 +65,7 @@ table {
 	margin: auto;
 	border-collapse: collapse;
 	text-align: center;
+	background-color: white;
 	/*	border-spacing: 0px; */
 }
 
@@ -86,4 +120,74 @@ button {
 	height: 40px;
 	font-size: 1rem;
 	font-weight: bold;
+}
+
+.whoGoesFirst {
+	border-style: solid;
+	border-width: 2px;
+	border-color: grey;
+	border-radius: 5px;
+	margin: 10px;
+	width: 250px;
+}
+
+.playerFirst {
+	border-style: solid;
+	border-width: 2px;
+	border-color: grey;
+	border-radius: 5px;
+	margin: 10px;
+	width: 250px;
+}
+
+.startButton {
+	border-style: solid;
+	border-width: 2px;
+	border-color: grey;
+	border-radius: 5px;
+	margin-left: 175px;
+	width: 250px;
+	margin-top: 10px;
+	font-weight: bold;
+}
+
+.first {
+	border-color: darkred;
+	font-weight: bold;
+}
+
+.whoGoesFirst:hover,
+.playerFirst:hover,
+.startButton:hover {
+	background-color: rgb(247, 247, 174);
+	transition: backround-color 0.3s;
+}
+
+.divdisable {
+	pointer-events: none;
+	opacity: 0.6;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 100px;
+	margin-top: 2px solid grey;
+}
+
+.ftrp {
+	max-width: 900px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	margin: 0 auto;
+	background-color: rgb(22, 34, 22);
+	color: white;
+	text-align: center;
+	height: 100px;
+}
+
+.ftrp p {
+	margin: 0px;
 }
